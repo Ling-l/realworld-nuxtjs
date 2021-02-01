@@ -34,7 +34,7 @@
         "_name": "_0e4faf38"
       },
       {
-        "path": "/editor",
+        "path": "/editor/:slug?",
         "name": "Editor",
         "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/editor",
         "_name": "_b6bcac24"

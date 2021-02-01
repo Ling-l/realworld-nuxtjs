@@ -44,6 +44,7 @@ export default {
     const { article } = data
     const md = new MarkdownIt()
     article.body = md.render(article.body)
+    article.favoriteDisabled = false
     return {
       article
     }
