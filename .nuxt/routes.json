@@ -1,0 +1,43 @@
+[
+  {
+    "path": "/",
+    "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/layout",
+    "children": [
+      {
+        "path": "",
+        "name": "Home",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/home"
+      },
+      {
+        "path": "/login",
+        "name": "Login",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/login"
+      },
+      {
+        "path": "/register",
+        "name": "Register",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/login"
+      },
+      {
+        "path": "/profile/:username",
+        "name": "Profile",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/profile"
+      },
+      {
+        "path": "/settings",
+        "name": "Settings",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/settings"
+      },
+      {
+        "path": "/editor",
+        "name": "Editor",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/editor"
+      },
+      {
+        "path": "/article/:slug",
+        "name": "Article",
+        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/article"
+      }
+    ]
+  }
+]
