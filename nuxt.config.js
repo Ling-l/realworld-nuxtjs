@@ -53,7 +53,7 @@ module.exports = {
   },
   server: {
     host: '0.0.0.0', // 会监听所有网点
-    port: 3000
+    port: 3333
   },
   // 注册插件
   plugins: [
