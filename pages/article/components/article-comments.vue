@@ -1,11 +1,13 @@
 <template>
   <div>
-    <form class="card comment-form">
+    <form class="card comment-form" @submit.prevent="onSubmit">
       <div class="card-block">
         <textarea
           class="form-control"
           placeholder="Write a comment..."
           rows="3"
+          v-model="comment"
+          required
         ></textarea>
       </div>
       <div class="card-footer">
@@ -21,7 +23,7 @@
     >
       <div class="card-block">
         <p class="card-text">
-          With supporting text below as a natural lead-in to additional content.
+          {{ comment.body }}
         </p>
       </div>
       <div class="card-footer">
@@ -54,7 +56,7 @@
 </template>
 
 <script>
-import { getComments } from '@/api/article'
+import { getComments, addComment } from '@/api/article'
 export default {
   name: 'ArticleComments',
   props: {
@@ -65,12 +67,29 @@ export default {
   },
   data () {
     return {
+      comment: '', // 评论内容
       comments: [] // 评论列表
     }
   },
   async mounted () {
     const { data } = await getComments(this.article.slug)
     this.comments = data.comments
+  },
+  methods: {
+    async onSubmit () {
+      const { slug } = this.article
+      const saveData = {
+        comment: {
+          body: this.comment
+        }
+      }
+      try {
+        const { data } = await addComment(slug, saveData)
+        this.comments.unshift(data.comment)
+        this.comment = ''
+      } catch (err) {
+      }
+    }
   }
 }
 </script>

@@ -1,43 +1,51 @@
 [
   {
     "path": "/",
-    "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/layout",
+    "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/layout",
     "children": [
       {
         "path": "",
         "name": "Home",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/home"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/home",
+        "_name": "_1fe0a9a0"
       },
       {
         "path": "/login",
         "name": "Login",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/login"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/login",
+        "_name": "_47265a70"
       },
       {
         "path": "/register",
         "name": "Register",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/login"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/login",
+        "_name": "_47265a70"
       },
       {
         "path": "/profile/:username",
         "name": "Profile",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/profile"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/profile",
+        "_name": "_4daa1148"
       },
       {
         "path": "/settings",
         "name": "Settings",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/settings"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/settings",
+        "_name": "_0e4faf38"
       },
       {
-        "path": "/editor",
+        "path": "/editor/:slug?",
         "name": "Editor",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/editor"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/editor",
+        "_name": "_b6bcac24"
       },
       {
         "path": "/article/:slug",
         "name": "Article",
-        "component": "/Users/tantaicongling/Documents/Ling/realworld-nuxtjs/pages/article"
+        "component": "/Users/ling/Documents/Ling/learn/realworld-nuxtjs/pages/article",
+        "_name": "_34745495"
       }
-    ]
+    ],
+    "_name": "_9f1ef8aa"
   }
 ]

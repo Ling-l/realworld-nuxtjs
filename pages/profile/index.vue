@@ -5,15 +5,17 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img src="http://i.imgur.com/Qr71crq.jpg" class="user-img" />
-            <h4>Eric Simons</h4>
-            <p>
-              Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda
-              looks like Peeta from the Hunger Games
-            </p>
-            <button class="btn btn-sm btn-outline-secondary action-btn">
-              <i class="ion-plus-round"></i>
-              &nbsp; Follow Eric Simons
+            <img :src="profile.image" class="user-img" />
+            <h4>{{ profile.username }}</h4>
+            <p v-if="profile.bio">{{ profile.bio }}</p>
+            <button
+              class="btn btn-sm btn-outline-secondary action-btn"
+              :disabled="followDisabled"
+              :class="{active: profile.following}"
+              @click="onFollow"
+            >
+              <i :class="isMe ? 'ion-gear-a' : 'ion-plus-round'"></i>
+              &nbsp; {{ isMe ? 'Edit Profile Settings' : ((profile.following ? 'Unfollow ' : 'Follow ') + profile.username)}}
             </button>
           </div>
         </div>
@@ -26,56 +28,65 @@
           <div class="articles-toggle">
             <ul class="nav nav-pills outline-active">
               <li class="nav-item">
-                <a class="nav-link active" href="">My Articles</a>
+                <nuxt-link
+                  class="nav-link"
+                  :to="{
+                    name: 'Profile'
+                  }"
+                  :class="{active: !$route.query.tab}"
+                  exact
+                >
+                  My Articles
+                </nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">Favorited Articles</a>
+                <nuxt-link
+                  class="nav-link"
+                  :to="{
+                    name: 'Profile',
+                    params: {
+                      username: profile.username,
+                    },
+                    query: {
+                      tab: 'favorites'
+                    }
+                  }"
+                  :class="{active: $route.query.tab === 'favorites'}"
+                  exact
+                >
+                  Favorited Articles
+                </nuxt-link>
               </li>
             </ul>
           </div>
 
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>How to build webapps that scale</h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-            </a>
-          </div>
+          <article-list :articles="articles"></article-list>
 
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href=""><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>
-                The song you won't ever stop singing. No matter how hard you
-                try.
-              </h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-              <ul class="tag-list">
-                <li class="tag-default tag-pill tag-outline">Music</li>
-                <li class="tag-default tag-pill tag-outline">Song</li>
-              </ul>
-            </a>
-          </div>
+          <!-- 分页列表 -->
+          <nav>
+            <ul class="pagination">
+              <li
+                class="page-item"
+                v-for="item in totalPage"
+                :key="item"
+                :class="{
+                  active: item === page
+                }"
+              >
+                <nuxt-link
+                  class="page-link"
+                  :to="{
+                    name: 'Profile',
+                    query: {
+                      page: item,
+                      tab
+                    }
+                  }"
+                >{{ item }}</nuxt-link>
+              </li>
+            </ul>
+          </nav>
+          <!-- /分页列表 -->
         </div>
       </div>
     </div>
@@ -83,9 +94,75 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import ArticleList from '@/components/Article/list'
+import { getProfile, followUser, unFollowUser } from '@/api/profile'
+import { getArticles } from '@/api/article'
 export default {
   middleware: 'authenticated',
-  name: "UserProfile"
+  name: "UserProfile",
+  components: { ArticleList },
+  data () {
+    return {
+      followDisabled: false
+    }
+  },
+  watchQuery: ['tab', 'page'],
+  computed: {
+    ...mapState(['user']),
+    isMe() {
+      return this.user.username === this.profile.username
+    },
+    totalPage () {
+      return Math.ceil(this.articlesCount / this.limit)
+    }
+  },
+  async asyncData(context) {
+    const { params, query } = context
+    const { tab } = query
+    const limit = 5
+    const page = Number.parseInt(query.page || 1)
+    const articleParams = tab === 'favorites' ? { favorited: params.username } : { author: params.username }
+    articleParams.limit = limit
+    articleParams.offset = (page - 1) * limit
+
+    const [ profileRes, articleRes ] = await Promise.all([getProfile(params.username), getArticles(articleParams)])
+    const { data: { profile } } = profileRes
+    const { data: { articles, articlesCount } } = articleRes
+    articles.forEach(article => article.favoriteDisabled = false)
+
+    return {
+      profile,
+      articles,
+      articlesCount,
+      page,
+      tab,
+      limit,
+    }
+  },
+  methods: {
+    async onFollow() {
+      if (this.isMe) {
+        this.$router.push({ name: 'Settings' })
+      } else {
+        this.followDisabled = true
+        if (this.profile.following) {
+          await unFollowUser(this.profile.username)
+          this.profile.following = false
+        } else {
+          await followUser(this.profile.username)
+          this.profile.following = true
+        }
+        this.followDisabled = false
+      }
+    }
+  },
+  head () {
+    const tab = this.$route.query.tab
+    return {
+      title: `${tab === 'favorites' ? 'Articles favorites by' : ''} ${this.profile.username} - RealWorld`,
+    }
+  }
 }
 </script>
 

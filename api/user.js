@@ -15,3 +15,8 @@ export const login = data => {
 export const register = data => {
   return request.post('/api/users', data)
 }
+
+// 更新用户信息
+export const updateUser = data => {
+  return request.put('/api/user', data)
+}

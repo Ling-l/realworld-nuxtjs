@@ -9,10 +9,14 @@ export const request = axios.create({
  * 通过插件获取上下文 - context
  */
 export default (context) => {
-  const { store } = context
+  const { store, redirect } = context
+  const { user } = store.state
+  if (!user) {
+    // redirect('/login')
+    return
+  }
   // 请求拦截器
   request.interceptors.request.use(config => {
-    const { user } = store.state
     if (user && user.token) {
       config.headers.Authorization = `Token ${user.token}`
     }

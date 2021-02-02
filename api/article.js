@@ -44,3 +44,23 @@ export const getComments = slug => {
     url: `/api/articles/${slug}/comments`
   })
 }
+
+// 评论文章 /api/articles/:slug/comments
+export const addComment = (slug, data) => {
+  return request.post(`/api/articles/${slug}/comments`, data)
+}
+
+// 创建文章
+export const createArticle = data => {
+  return request.post('/api/articles', data)
+}
+
+// 更新文章 /api/articles/:slug
+export const updateArticle = (slug, data) => {
+  return request.put(`/api/articles/${slug}`, data)
+}
+
+// 删除文章
+export const delArticle = slug => {
+  return request.delete(`/api/articles/${slug}`)
+}

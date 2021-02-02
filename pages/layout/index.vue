@@ -4,7 +4,7 @@
     <!-- 导航 -->
     <nav class="navbar navbar-light">
       <div class="container">
-        <a class="navbar-brand" href="index.html">conduit</a>
+        <nuxt-link class="navbar-brand" to='/'>conduit</nuxt-link>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
             <!-- Add "active" class when you're on that page" -->
@@ -25,7 +25,12 @@
               </nuxt-link>
             </li>
             <li class="nav-item">
-              <nuxt-link class="nav-link" :to="'/profile/' + user.id">
+              <nuxt-link class="nav-link"  :to="{
+                name: 'Profile',
+                params: {
+                  username: user.username
+                }
+              }">
                 <img :src="user.image" alt="" class="user-pic">
                 {{ user.username }}
               </nuxt-link>
